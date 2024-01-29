@@ -1,6 +1,12 @@
-require('@chainlink/env-enc').config()
+const path = require('path');
+
+require('dotenv').config();
+const envPath = path.join(__dirname, `.env.${process.env.NODE_ENV}`);
+console.log('Loading env', envPath);
+require('dotenv').config({ path: envPath });
 require('@nomicfoundation/hardhat-toolbox');
 
+Error.stackTraceLimit = Infinity;
 const {
   DEPLOYER_KEY,
   APPROVER_KEY,

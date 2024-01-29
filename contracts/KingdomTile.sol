@@ -99,9 +99,7 @@ contract KingdomTiles is Roles, ERC721, CCIPReceiver, IERC2981 {
       revert NotEnoughLink();
     }
 
-    bytes32 messageId;
-
-    messageId = IRouterClient(router).ccipSend(
+    bytes32 messageId = IRouterClient(router).ccipSend(
       toChain,
       message
     );

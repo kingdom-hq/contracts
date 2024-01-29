@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const { deployAll, wait, cheapSignature} = require('../helpers');
+const { deployAll, cheapSignature} = require('../helpers');
 
 describe("CCIP", function () {
   let owner;
@@ -11,7 +11,7 @@ describe("CCIP", function () {
   const context = {};
   before(async function () {
     [owner, addr1, addr2, signer] = await ethers.getSigners();
-    const { link, router, contract, baseURI} = await deployAll();
+    const { link, router, contract, baseURI} = await deployAll(owner);
     context.link = link;
     context.router = router;
     context.contract = contract;

@@ -17,7 +17,7 @@ describe("ERC721", function () {
 
   beforeEach(async function () {
     [owner, addr1, addr2, signer] = await ethers.getSigners();
-    const contracts = await deployAll();
+    const contracts = await deployAll(owner);
     link = contracts.link;
     router = contracts.router;
     contract = contracts.contract;

@@ -20,10 +20,10 @@
   "dependencies": {
     "@chainlink/contracts": "^0.8.0",
     "@chainlink/contracts-ccip": "^0.7.6",
-    "@chainlink/env-enc": "^1.0.5",
     "@openzeppelin/contracts": "^5.0.0",
     "@openzeppelin/test-helpers": "^0.5.16",
     "chai": "^4.3.10",
+    "dotenv": "^16.4.1",
     "erc721a": "^4.2.3"
   },
   "scripts": {
