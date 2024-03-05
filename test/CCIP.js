@@ -45,29 +45,27 @@ describe("CCIP", function () {
     const Router = await ethers.getContractFactory("Router");
     const otherRouter = await Router.deploy(context.link.address);
     await otherRouter.deployed();
-    await expect(otherRouter.ccipReceive(
-      context.contract.address,
+    await expect(otherRouter.routeMessage(
       {
         messageId: '0x' + '0'.repeat(63) + '1',
         sourceChainSelector: 1,
         sender: '0x' + '0'.repeat(24) + owner.address.slice(-40),
         data: ['0x', '0'.repeat(23), '2', addr2.address.toLowerCase().slice(-40)].join(''),
         destTokenAmounts: []
-      }
+      }, 0, 0, context.contract.address
     )).to.be.revertedWithCustomError(context.contract, 'InvalidRouter');
   });
 
   it('Mints an NFT when receiving a CCIP Message', async () => {
     const { contract, router, baseURI } = context;
-    const tx = await router.ccipReceive(
-      contract.address,
+    const tx = await router.routeMessage(
       {
         messageId: '0x' + '0'.repeat(63) + '1',
         sourceChainSelector: 1,
         sender: '0x' + '0'.repeat(24) + owner.address.slice(-40),
         data: ['0x', '0'.repeat(23), '2', addr2.address.toLowerCase().slice(-40)].join(''),
         destTokenAmounts: []
-      }
+      }, 0, 0, contract.address
     );
     await tx.wait();
     expect(await contract.ownerOf(2)).to.eq(addr2.address);
@@ -86,15 +84,14 @@ describe("CCIP", function () {
   it('CCIP Receive previously sent item', async () => {
     const { contract, router, baseURI } = context;
     expect(await contract.tokenURI(1)).to.eq(`${baseURI}1_ccip.json`);
-    const tx = await router.ccipReceive(
-      contract.address,
+    const tx = await router.routeMessage(
       {
         messageId: '0x' + '0'.repeat(63) + '2',
         sourceChainSelector: 1,
         sender: '0x' + '0'.repeat(24) + owner.address.slice(-40),
         data: ['0x', '0'.repeat(23), '1', addr2.address.toLowerCase().slice(-40)].join(''),
         destTokenAmounts: []
-      }
+      }, 0, 0, contract.address
     );
     await tx.wait();
     expect(await contract.ownerOf(1)).to.eq(addr2.address);

@@ -12,6 +12,7 @@ contract Router is IRouterClient {
   address private link;
 
   event CCIPMessage(uint64 chain, bytes receiver, bytes data);
+  event MessageExecuted(bytes32 messageId, uint64 sourceChainSelector, address offRamp, bytes32 calldataHash);
 
   constructor(address _link) {
     link = _link;
@@ -44,10 +45,13 @@ contract Router is IRouterClient {
     return keccak256(abi.encodePacked(destinationChainSelector, message.data, _counter));
   }
 
-  function ccipReceive(
-    address dest,
-    Client.Any2EVMMessage calldata message
+  function routeMessage(
+    Client.Any2EVMMessage calldata message,
+    uint16 gasForCallExactCheck,
+    uint256 gasLimit,
+    address receiver
   ) external {
-    IAny2EVMMessageReceiver(dest).ccipReceive(message);
+    IAny2EVMMessageReceiver(receiver).ccipReceive(message);
+    emit MessageExecuted(message.messageId, message.sourceChainSelector, msg.sender, keccak256(message.data));
   }
 }

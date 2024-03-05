@@ -1,13 +1,10 @@
 const { ethers } = require('hardhat');
 const ask = require('../../utils/ask');
 const { attachNetworks } = require('../../utils/ccip');
+const {getWalletWithEthers} = require('../../utils/accounts');
 
 async function main() {
   const networks = await attachNetworks();
-  const minterPK = await ask('Minter PK: ');
-  if (!/^(?:0x)?[0-9a-fA-F]{64}$/.test(minterPK)) {
-    throw new Error('Must be a 32 bytes hex string');
-  }
   const chainSelector = parseInt(await ask('Chain Selector: '));
   if (isNaN(chainSelector)) {
     throw new Error("Must be a number");
@@ -16,27 +13,23 @@ async function main() {
   if (!net) {
     throw new Error(`Could not find chain ${chainSelector}`);
   }
+  const minterPK = await ask('Minter PK: ');
+  if (!/^(?:0x)?[0-9a-fA-F]{64}$/.test(minterPK)) {
+    throw new Error('Must be a 32 bytes hex string');
+  }
   const tokenId = parseInt(await ask('Token ID: '));
   if (isNaN(tokenId)) {
     throw new Error("Must be a number");
   }
 
+  const recipient = await getWalletWithEthers(net.provider);
   const minter = new ethers.Wallet(minterPK, net.provider);
-  console.log('Initialized minter', minter.address);
+  console.log('Initialized owner', minter.address);
+  console.log(`Initialized recipient:\n  - Address: ${recipient.address}\n  - Private Key: ${recipient.privateKey}`);
   const asMinter = net.contract.connect(minter);
 
-  const sisterChain = parseInt(await ask('Sister Chain Selector: '));
-  if (isNaN(sisterChain)) {
-    throw new Error("Must be a number");
-  }
-  const sisterNet = networks.find(n => n.chainSelector === sisterChain);
-
-  if (!sisterNet) {
-    throw new Error(`Could not find chain ${sisterChain}`);
-  }
-
-  await asMinter.bridge(tokenId, minter.address, sisterChain, sisterNet.contract.address);
-  console.log(`Bridged #${tokenId} from network ${net.chainSelector} (${net.port}) to ${sisterNet.chainSelector} (${sisterNet.port})`);
+  await asMinter.transferFrom(minter.address, recipient.address, tokenId);
+  console.log(`Transfered #${tokenId} from ${minter.address} to ${recipient.address}`);
 }
 
 main().catch(e => {

@@ -29,6 +29,10 @@
   "scripts": {
     "test": "hardhat test --bail",
     "gas": "REPORT_GAS=true hardhat test",
-    "start": "hardhat run scripts/advanced-test.js"
+    "start": "hardhat run scripts/start.js",
+    "mint": "hardhat run scripts/advanced/mint.js",
+    "bridge": "hardhat run scripts/advanced/bridge.js",
+    "transfer": "hardhat run scripts/advanced/transfer.js",
+    "uri": "hardhat run scripts/advanced/uri.js"
   }
 }

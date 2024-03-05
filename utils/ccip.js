@@ -46,6 +46,9 @@ async function initNetworks() {
         await contract.setSister(otherData.chainSelector, contract.address, true);
       }
       console.log('- Sisters linked');
+      await provider.send("evm_setIntervalMining", [1000]);
+      await provider.send("evm_setAutomine", [true]);
+      console.log('- Started mining');
       const network = {
         ...data,
         node,
@@ -57,7 +60,7 @@ async function initNetworks() {
       };
       networks.push(network);
       router.on('CCIPMessage', async (chain, receiver, message) => {
-        console.log('Forwarding CCIP Message from chain', network.chainSelector, 'to', chain.toNumber());
+        console.log('Forwarding CCIP Message from chain', network.chainSelector, 'to', chain.toNumber(), 'in 10 sec');
         const recipient = ethers.utils.getAddress('0x' + receiver.slice(-40));
         const destinationNetwork = networks.find(n => n.chainSelector === chain.toNumber());
         const outMessage = {
@@ -67,7 +70,9 @@ async function initNetworks() {
           data: message,
           destTokenAmounts: []
         };
-        await (await destinationNetwork.router.ccipReceive(recipient, outMessage)).wait();
+        await new Promise(r => setTimeout(r, 10000));
+        await (await destinationNetwork.router.routeMessage(outMessage, 0, 0, recipient)).wait();
+        console.log('Forwarded CCIP Message from chain', network.chainSelector, 'to', chain.toNumber());
       });
     } catch (e) {
       await node.stop();

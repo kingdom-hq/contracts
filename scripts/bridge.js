@@ -1,6 +1,5 @@
 const { ethers } = require('hardhat');
 const ask = require('../utils/ask');
-const { cheapSignature } = require('../helpers');
 
 async function main() {
   const [deployer, minter] = await ethers.getSigners();
