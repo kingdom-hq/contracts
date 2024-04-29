@@ -16,7 +16,12 @@ interface IERC721A {
   /**
    * The token does not exist.
    */
-  error ApprovalQueryForNonexistentToken();
+  error NonExistentToken();
+
+  /**
+   * The token does not exist.
+   */
+  error MintExistingToken();
 
   /**
    * Cannot query the balance for the zero address.
@@ -32,11 +37,6 @@ interface IERC721A {
    * The quantity of tokens minted must be more than zero.
    */
   error MintZeroQuantity();
-
-  /**
-   * The token does not exist.
-   */
-  error OwnerQueryForNonexistentToken();
 
   /**
    * The caller must own the token or be an approved operator.
@@ -58,11 +58,6 @@ interface IERC721A {
    * Cannot transfer to the zero address.
    */
   error TransferToZeroAddress();
-
-  /**
-   * The token does not exist.
-   */
-  error URIQueryForNonexistentToken();
 
   /**
    * The `quantity` minted with ERC2309 exceeds the safety limit.

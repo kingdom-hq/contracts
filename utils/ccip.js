@@ -36,11 +36,12 @@ async function initNetworks() {
       await wait(500);
       console.log('Ready');
       const deployer = new ethers.Wallet(process.env.DEPLOYER_KEY, provider);
-      const { router, link, contract } = await deployAll(deployer);
+      const { router, link, gameEvents, contract } = await deployAll(deployer);
       console.log('- Contracts deployed')
       const longAddress = '0x' + '0'.repeat(24) + contract.address.slice(-40).toLowerCase();
       await (await link.mint(contract.address, ethers.utils.parseEther('1000'))).wait();
       await (await contract.setRole(approver.address, 1, true)).wait();
+      await (await gameEvents.setRole(approver.address, 1, true)).wait();
       for (const otherData of networkData) {
         if (otherData === data) continue;
         await contract.setSister(otherData.chainSelector, contract.address, true);
@@ -56,6 +57,7 @@ async function initNetworks() {
         router,
         link,
         contract,
+        gameEvents,
         approver
       };
       networks.push(network);

@@ -11,6 +11,7 @@ async function main() {
     console.log([net.name, 'tiles', 'contract', 'address'].join('_').toUpperCase() + '=' + net.contract.address);
     console.log([net.name, 'router', 'address'].join('_').toUpperCase() + '=' + net.router.address);
     console.log([net.name, 'link', 'address'].join('_').toUpperCase() + '=' + net.link.address);
+    console.log([net.name, 'game', 'events', 'address'].join('_').toUpperCase() + '=' + net.gameEvents.address);
   }
 }
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19;
+pragma solidity 0.8.23;
 
 import "../interfaces/IERC721A.sol";
 import "../libraries/String.sol";
@@ -64,7 +64,7 @@ abstract contract ERC721 is IERC721A {
   }
 
   function getApproved(uint256 tokenId) public view returns (address) {
-    if (!_exists(tokenId)) _revert(ApprovalQueryForNonexistentToken.selector);
+    if (!_exists(tokenId)) _revert(NonExistentToken.selector);
 
     return _tokenApprovals[tokenId].value;
   }
@@ -167,6 +167,7 @@ abstract contract ERC721 is IERC721A {
   }
 
   function _mint(address to, uint256 tokenId) internal virtual {
+    if (_exists(tokenId)) _revert(MintExistingToken.selector);
     _owner[tokenId] = to;
     unchecked {
       _balance[to] += 1;

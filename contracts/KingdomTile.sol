@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19;
+pragma solidity 0.8.23;
 
 import "@chainlink/contracts/src/v0.8/shared/interfaces/LinkTokenInterface.sol";
 import "@chainlink/contracts-ccip/src/v0.8/ccip/interfaces/IRouterClient.sol";

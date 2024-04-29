@@ -50,6 +50,23 @@ describe("ERC721", function () {
       expect(await contract.balanceOf(addr1.address)).to.equal(1);
     });
 
+    it("Should fail to mint the same token", async function () {
+      {
+        const signature = await cheapSignature(signer, 1, addr1.address, 31337, 0);
+        await contract.connect(addr1).mint(addr1.address, 1, signature);
+        expect(await contract.balanceOf(addr1.address)).to.equal(1);
+      }
+      const value = ethers.utils.parseEther('0.15');
+      const signature = await cheapSignature(
+        signer,
+        1,
+        addr1.address,
+        31337,
+        value
+      );
+      await expect(contract.connect(addr1).mint(addr1.address, 1, signature, { value })).to.be.reverted;
+    });
+
     it("Should fail to mint with a wrong value", async function () {
       const value = ethers.utils.parseEther('0.15');
       const signature = await cheapSignature(

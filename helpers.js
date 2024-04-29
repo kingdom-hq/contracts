@@ -1,5 +1,4 @@
 const { ethers } = require('hardhat');
-const { BigNumber } = ethers;
 
 const deployAll = async (signer) => {
   const baseURI = 'http://truc/';
@@ -16,10 +15,14 @@ const deployAll = async (signer) => {
   const contract = await Factory.deploy(router.address, link.address, baseURI);
   await contract.deployed();
 
-  return { link, router, contract, baseURI };
+  const GameEvents = await ethers.getContractFactory('KingdomGameEvents', signer);
+  const gameEvents = await GameEvents.deploy();
+  await gameEvents.deployed();
+
+  return { link, router, contract, gameEvents, baseURI };
 }
 
-const attachAll = async (signer, routerAddress, linkAddress, contractAddress) => {
+const attachAll = async (signer, routerAddress, linkAddress, contractAddress, gameEventsAddress) => {
   const baseURI = 'http://truc/';
 
   const Link = await ethers.getContractFactory('Link', signer);
@@ -31,7 +34,10 @@ const attachAll = async (signer, routerAddress, linkAddress, contractAddress) =>
   const Factory = await ethers.getContractFactory('KingdomTiles', signer);
   const contract = Factory.attach(contractAddress);
 
-  return { link, router, contract, baseURI };
+  const GameEvents = await ethers.getContractFactory('KingdomGameEvents', signer);
+  const gameEvents = GameEvents.attach(gameEventsAddress);
+
+  return { link, router, contract, gameEvents, baseURI };
 }
 
 const wait = async (ms) => new Promise(r => setTimeout(r, ms));

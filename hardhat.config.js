@@ -22,12 +22,13 @@ const accounts = [DEPLOYER_KEY, APPROVER_KEY];
 
 module.exports = {
   solidity: {
-    version: "0.8.19",
+    version: "0.8.23",
     settings: {
       optimizer: {
         enabled: true,
         runs: 1
-      }
+      },
+      evmVersion: 'shanghai'
     }
   },
   networks: {
@@ -48,7 +49,7 @@ module.exports = {
     apiKey: {
       avalanche: SNOWTRACE_API_KEY,
       polygon: POLYGONSCAN_API_KEY,
-      mainnet: ETHERSCAN_API_KEY,
+      mainnet: ETHERSCAN_API_KEY
     }
   }
 };
