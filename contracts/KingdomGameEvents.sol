@@ -6,6 +6,8 @@ import "./Roles.sol";
 
 contract KingdomGameEvents is Roles {
     error UnapprovedInteraction();
+    error WithdrawFailed();
+
     event KingdomGameEvent();
 
     mapping(address => uint256) private _userNonces;
@@ -44,6 +46,13 @@ contract KingdomGameEvents is Roles {
         address signer = ECDSA.recover(signedMessage, signature);
         if (!_hasRole(signer, 1)) {
             revert UnapprovedInteraction();
+        }
+    }
+
+    function withdraw() external onlyRole(0) {
+        (bool success, ) = msg.sender.call{ value: address(this).balance }("");
+        if (!success) {
+            revert WithdrawFailed();
         }
     }
 }

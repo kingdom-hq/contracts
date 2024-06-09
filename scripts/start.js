@@ -1,4 +1,3 @@
-const { ethers } = require("hardhat");
 const { initNetworks } = require('../utils/ccip');
 
 let networks;
@@ -22,10 +21,6 @@ main().then(() => {
 });
 
 process.on('SIGINT', async () => {
-  console.log('Stopping networks');
-  for (const net of networks) {
-    await net.node.stop();
-  }
   console.log('All networks stopped');
   process.exit();
 });

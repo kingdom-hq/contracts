@@ -3,7 +3,7 @@ const ask = require('../utils/ask');
 
 async function main() {
   const [deployer, approver] = await ethers.getSigners();
-  const factory = await ethers.getContractFactory('KingdomTiles');
+  const factory = await ethers.getContractFactory('KingdomTiles', deployer);
   const router = await ask('Router address: ');
   const linkToken = await ask('Link Token: ');
   const baseURI = await ask('BaseURI: ');

@@ -51,6 +51,7 @@ abstract contract ERC721 is IERC721A {
   }
 
   function tokenURI(uint256 tokenId) external view returns(string memory) {
+    if (!_exists(tokenId)) _revert(NonExistentToken.selector);
     string memory extra = _owner[tokenId] == address(this) ? "_ccip" : "";
     return string(abi.encodePacked(_baseURI, tokenId.toString(), extra, ".json"));
   }
